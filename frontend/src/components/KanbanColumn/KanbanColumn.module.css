@@ -1,31 +1,39 @@
 .column {
     flex: 1;
-    margin: 0 12px;
-    background-color: #f4f5f7;
+    min-width: 300px;
+    background-color: #f3f4f6;
     border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    max-height: 80vh;
+    padding: 1rem;
+    margin: 0 0.5rem;
+
+    transition: background-color 0.2s ease;
 }
 
+/* --- NOVO ESTILO DND --- */
+.columnOver {
+    background-color: #e0e7ff;
+    /* Um brilho azul/indigo */
+}
+
+/* --------------------- */
+
+
 .title {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    color: #172b4d;
-    padding: 16px;
-    border-bottom: 2px solid #dfe1e6;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
 }
 
 .taskList {
-    padding: 8px;
-    overflow-y: auto;
-    flex-grow: 1;
     min-height: 100px;
 }
 
-.emptyMessage {
+.emptyText {
+    font-size: 0.9rem;
+    color: #6b7280;
     text-align: center;
-    color: #5e6c84;
-    font-style: italic;
-    padding: 16px;
+    padding: 1rem;
 }
