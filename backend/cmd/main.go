@@ -1,7 +1,22 @@
 package main
 
 import (
+	"sync"
+
 	"github.com/gin-gonic/gin"
+)
+
+type Task struct {
+	ID        int    `json:"id"`
+	Titulo    string `json:"titulo"`
+	Descricao string `json:"descricao,omitempty"`
+	Status    string `json:"status"`
+}
+
+var (
+	tasks     = make(map[int]Task)
+	nextID    = 1
+	tasksLock = sync.Mutex{}
 )
 
 func main() {
