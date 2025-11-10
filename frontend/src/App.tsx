@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import type { Task } from './types/task';
+import { TASK_STATUSES } from './types/task';
 import api from './services/api';
+import { KanbanColumn } from './components/KanbanColumn/KanbanColumn';
 
 
 function App() {
@@ -28,6 +30,9 @@ function App() {
     fetchTasks();
   }, []);
 
+  const todoTasks = tasks.filter(task => task.status === 'A Fazer');
+  const inProgressTasks = tasks.filter(task => task.status === 'Em Progresso');
+  const doneTasks = tasks.filter(task => task.status === 'Concluídas');
 
   if (loading) {
     return (
@@ -60,14 +65,9 @@ function App() {
         <h1>Meu Kanban</h1>
       </header>
       <main className="kanban-board">
-        {tasks.map(task => (
-          <div key={task.id}>
-            <p>{task.titulo} ({task.status})</p>
-          </div>
-        ))}
-        {tasks.length === 0 && (
-          <p>Nenhuma tarefa encontrada. Que tal adicionar uma?</p>
-        )}
+        <KanbanColumn title={TASK_STATUSES[0]} tasks={todoTasks} />
+        <KanbanColumn title={TASK_STATUSES[1]} tasks={inProgressTasks} />
+        <KanbanColumn title={TASK_STATUSES[2]} tasks={doneTasks} />
       </main>
     </div>
   );
