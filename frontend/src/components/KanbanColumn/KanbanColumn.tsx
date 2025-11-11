@@ -7,9 +7,10 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 interface KanbanColumnProps {
   title: Task['status'];
   tasks: Task[];
+  onTaskClick: (task: Task) => void;
 }
 
-export function KanbanColumn({ title, tasks }: KanbanColumnProps) {
+export function KanbanColumn({ title, tasks, onTaskClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: title,
     data: {
@@ -32,7 +33,9 @@ export function KanbanColumn({ title, tasks }: KanbanColumnProps) {
         <div className={styles.taskList}>
           {tasks.length > 0 ? (
             tasks.map(task => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task}
+                onClick={() => onTaskClick(task)} />
+
             ))
           ) : (
             <p className={styles.emptyText}>Nenhuma tarefa aqui.</p>

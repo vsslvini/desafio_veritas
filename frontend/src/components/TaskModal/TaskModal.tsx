@@ -1,28 +1,45 @@
 import { useState, useEffect } from 'react';
-import { TASK_STATUSES } from "./../../types/task";
+import type { Task } from '../../types/task';
 import styles from './TaskModal.module.css';
+
+// [!code ++] Definindo os dados que o formulário envia
+type TaskPayload = Omit<Task, 'id'>;
 
 interface TaskModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAddTask: (taskData: { titulo: string; descricao?: string; status: typeof TASK_STATUSES[number] }) => Promise<void>;
+    taskToEdit: Task | null;
+    onSave: (taskData: TaskPayload, taskId?: number) => Promise<void>;
+    onDelete: (taskId: number) => Promise<void>;
 }
 
-export function TaskModal({ isOpen, onClose, onAddTask }: TaskModalProps) {
+export function TaskModal({
+    isOpen,
+    onClose,
+    taskToEdit,
+    onSave,
+    onDelete
+}: TaskModalProps) {
+
     const [titulo, setTitulo] = useState('');
     const [descricao, setDescricao] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isEditMode = taskToEdit !== null;
 
-    // Limpa o formulário quando a modal é fechada
     useEffect(() => {
-        if (!isOpen) {
-            setTitulo('');
-            setDescricao('');
+        if (isOpen) {
+            if (isEditMode) {
+                setTitulo(taskToEdit.titulo);
+                setDescricao(taskToEdit.descricao || '');
+            } else {
+                setTitulo('');
+                setDescricao('');
+            }
             setError('');
             setIsSubmitting(false);
         }
-    }, [isOpen]);
+    }, [isOpen, taskToEdit, isEditMode]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,12 +52,35 @@ export function TaskModal({ isOpen, onClose, onAddTask }: TaskModalProps) {
         setIsSubmitting(true);
 
         try {
-            // A nova tarefa sempre começa como "A Fazer"
-            await onAddTask({ titulo, descricao, status: 'A Fazer' });
-            onClose(); // Fecha a modal após sucesso
+            const status: Task['status'] = isEditMode ? taskToEdit.status : 'A Fazer';
+            const taskData: TaskPayload = { titulo, descricao, status };
+            await onSave(taskData, taskToEdit?.id);
+
+            onClose();
         } catch (err) {
             console.error(err);
-            setError('Falha ao criar a tarefa. Tente novamente.');
+            setError('Falha ao salvar a tarefa. Tente novamente.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!isEditMode) return;
+
+        if (!window.confirm(`Tem certeza que deseja excluir a tarefa: "${taskToEdit.titulo}"?`)) {
+            return;
+        }
+
+        setIsSubmitting(true);
+        setError('');
+
+        try {
+            await onDelete(taskToEdit.id);
+            onClose();
+        } catch (err) {
+            console.error(err);
+            setError('Falha ao excluir a tarefa.');
         } finally {
             setIsSubmitting(false);
         }
@@ -54,7 +94,7 @@ export function TaskModal({ isOpen, onClose, onAddTask }: TaskModalProps) {
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <header className={styles.header}>
-                    <h2>Adicionar Nova Tarefa</h2>
+                    <h2>{isEditMode ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'}</h2>
                     <button onClick={onClose} className={styles.closeButton}>&times;</button>
                 </header>
 
@@ -86,6 +126,18 @@ export function TaskModal({ isOpen, onClose, onAddTask }: TaskModalProps) {
                     </div>
 
                     <div className={styles.actions}>
+                        {isEditMode && (
+                            <button
+                                type="button"
+                                className={styles.buttonDanger}
+                                onClick={handleDelete}
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Excluindo...' : 'Excluir'}
+                            </button>
+                        )}
+                        {/* [!code end] */}
+
                         <button
                             type="button"
                             className={styles.buttonSecondary}
@@ -99,7 +151,7 @@ export function TaskModal({ isOpen, onClose, onAddTask }: TaskModalProps) {
                             className={styles.buttonPrimary}
                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? 'Salvando...' : 'Salvar'}
+                            {isSubmitting ? 'Salvando...' : (isEditMode ? 'Atualizar' : 'Salvar')}
                         </button>
                     </div>
                 </form>

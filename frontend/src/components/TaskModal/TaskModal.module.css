@@ -140,3 +140,34 @@
 .buttonSecondary:hover {
     background-color: #e5e7eb;
 }
+
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    align-items: center;
+}
+
+.buttonDanger {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #dc2626;
+    color: #ffffff;
+    margin-right: auto;
+}
+
+.buttonDanger:hover {
+    background-color: #b91c1c;
+}
+
+.buttonDanger:disabled {
+    background-color: #fca5a5;
+    cursor: not-allowed;
+}

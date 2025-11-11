@@ -5,9 +5,10 @@ import { CSS } from '@dnd-kit/utilities';
 
 interface TaskCardProps {
     task: Task;
+    onClick: () => void;
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, onClick }: TaskCardProps) {
     const {
         attributes,
         listeners,
@@ -35,6 +36,7 @@ export function TaskCard({ task }: TaskCardProps) {
             style={style}
             {...attributes}
             {...listeners}
+            onClick={onClick}
             className={`${styles.card} ${isDragging ? styles.cardDragging : ''}`}
         >
             <h3 className={styles.title}>{task.titulo}</h3>
