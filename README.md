@@ -1,4 +1,4 @@
-# Desafio Fullstack - Mini Kanban (Veritas)
+# Desafio Fullstack - Mini Kanban 
 
 <div align="center">
 
@@ -6,16 +6,6 @@
 [![Assista à demonstração](docs/Mini%20Kanban.png)](https://youtu.be/ZcD8-lEaU-4)
 
 </div>
-Este repositório contém a solução para o desafio técnico fullstack de um mini-quadro Kanban, utilizando Go no backend e React com TypeScript no frontend.
-
-##  Features
-
-O projeto vai além do MVP, implementando alguns requisitos bônus:
-
-- API RESTful completa com CRUD de tarefas.
-- Persistência de dados em arquivo JSON no backend.
-- Funcionalidade completa de Drag and Drop (_dnd-kit_) para mover tarefas.
-- Sistema de tema dinâmico (Dark Mode / Light Mode) com React Context e CSS Variables.
 
 ##  Tech Stack
 
